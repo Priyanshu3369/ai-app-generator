@@ -259,7 +259,6 @@ export default function DynamicTable({ appId, model, columns, actions, onEdit, t
           )}
         </div>
       </div>
-
       {/* Pagination */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-2 py-4">
         <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest order-2 sm:order-1">
