@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Terminal, Rocket, Database, Lock, TableProperties, Bell, 
-  Trash2, ChevronRight, Play, Server, Code2, Plus, Grip 
+  Trash2, ChevronRight, Play, Server, Code2, Plus, Grip, X 
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

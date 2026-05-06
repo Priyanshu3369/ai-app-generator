@@ -6,7 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Menu, X, LogOut, ChevronRight, LayoutDashboard, CheckSquare, 
   Package, Users, Settings, BarChart3, MessageSquare, Calendar,
-  FolderOpen, CreditCard, Ticket, ClipboardList, Briefcase, FileText, Eye, EyeOff
+  FolderOpen, CreditCard, Ticket, ClipboardList, Briefcase, FileText, Eye, EyeOff,
+  AlertCircle
 } from 'lucide-react';
 import PageRenderer from '@/components/dynamic/PageRenderer';
 import NotificationInbox from '@/components/dynamic/NotificationInbox';

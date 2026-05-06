@@ -285,7 +285,3 @@ export default function DynamicTable({ appId, model, columns, actions, onEdit, t
     </div>
   );
 }
-
-    </div>
-  );
-}
