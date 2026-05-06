@@ -47,16 +47,29 @@ export async function initPlatformTables() {
   await query(`
     CREATE TABLE IF NOT EXISTS _platform_users (
       id TEXT PRIMARY KEY,
-      email TEXT UNIQUE NOT NULL,
+      email TEXT NOT NULL,
       password_hash TEXT NOT NULL,
       name TEXT,
       role TEXT DEFAULT 'user',
       app_id TEXT,
       metadata JSONB DEFAULT '{}',
       created_at TIMESTAMPTZ DEFAULT NOW(),
-      updated_at TIMESTAMPTZ DEFAULT NOW()
+      updated_at TIMESTAMPTZ DEFAULT NOW(),
+      UNIQUE NULLS NOT DISTINCT (email, app_id)
     )
   `);
+
+  try {
+    await query('ALTER TABLE _platform_users DROP CONSTRAINT IF EXISTS _platform_users_email_key');
+  } catch (e) {}
+  try {
+    // Using Postgres 15+ NULLS NOT DISTINCT if supported, otherwise fallback to standard unique
+    await query('ALTER TABLE _platform_users ADD CONSTRAINT _platform_users_email_app_id_key UNIQUE NULLS NOT DISTINCT (email, app_id)');
+  } catch (e) {
+    try {
+      await query('ALTER TABLE _platform_users ADD CONSTRAINT _platform_users_email_app_id_key UNIQUE (email, app_id)');
+    } catch (fallbackErr) {}
+  }
   await query(`
     CREATE TABLE IF NOT EXISTS _platform_notifications (
       id TEXT PRIMARY KEY,

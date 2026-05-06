@@ -60,6 +60,91 @@ const SAMPLE_CONFIG = {
   ]
 };
 
+const CRM_CONFIG = {
+  appName: "Sales CRM",
+  description: "Customer Relationship Management System",
+  auth: { enabled: true, methods: ["email"] },
+  theme: { primaryColor: "#10b981", darkMode: true },
+  models: [
+    {
+      name: "customers",
+      userScoped: true,
+      fields: [
+        { name: "name", type: "string", label: "Company Name", required: true },
+        { name: "contact", type: "string", label: "Contact Person" },
+        { name: "email", type: "string", label: "Email" },
+        { name: "status", type: "select", label: "Status", options: ["Lead", "Active", "Churned"], defaultValue: "Lead" }
+      ]
+    }
+  ],
+  pages: [
+    {
+      path: "/dashboard",
+      title: "Dashboard",
+      icon: "layout-dashboard",
+      components: [
+        { type: "dashboard", widgets: [{ type: "stat", title: "Total Customers", model: "customers", aggregation: "count", color: "green", icon: "users" }] }
+      ]
+    },
+    {
+      path: "/customers",
+      title: "Customers",
+      icon: "users",
+      components: [
+        {
+          type: "table", model: "customers",
+          columns: [{ field: "name", header: "Company" }, { field: "email", header: "Email" }, { field: "status", header: "Status", render: "badge" }],
+          actions: [{ label: "Edit", action: "edit" }, { label: "Delete", action: "delete", confirm: true }]
+        }
+      ]
+    }
+  ]
+};
+
+const INVENTORY_CONFIG = {
+  appName: "StockFlow",
+  description: "Warehouse & Inventory Management",
+  auth: { enabled: true, methods: ["email"] },
+  theme: { primaryColor: "#f59e0b", darkMode: false },
+  models: [
+    {
+      name: "products",
+      userScoped: true,
+      fields: [
+        { name: "sku", type: "string", label: "SKU", required: true },
+        { name: "name", type: "string", label: "Product Name", required: true },
+        { name: "quantity", type: "integer", label: "Quantity in Stock", required: true },
+        { name: "price", type: "currency", label: "Unit Price" }
+      ]
+    }
+  ],
+  pages: [
+    {
+      path: "/dashboard",
+      title: "Overview",
+      icon: "layout-dashboard",
+      components: [
+        { type: "dashboard", widgets: [
+          { type: "stat", title: "Total Products", model: "products", aggregation: "count", color: "orange", icon: "box" },
+          { type: "stat", title: "Total Stock Value", model: "products", aggregation: "sum", field: "price", color: "green", icon: "money" }
+        ]}
+      ]
+    },
+    {
+      path: "/inventory",
+      title: "Inventory",
+      icon: "package",
+      components: [
+        {
+          type: "table", model: "products",
+          columns: [{ field: "sku", header: "SKU" }, { field: "name", header: "Product Name" }, { field: "quantity", header: "Stock", render: "badge" }, { field: "price", header: "Price", render: "currency" }],
+          actions: [{ label: "Edit", action: "edit" }, { label: "Delete", action: "delete", confirm: true }]
+        }
+      ]
+    }
+  ]
+};
+
 interface App {
   id: string;
   name: string;
@@ -277,6 +362,13 @@ export default function PlatformHome() {
                   {creating ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" /> : <Play className="mr-2 h-4 w-4" />}
                   Deploy Engine
                 </button>
+              </div>
+              
+              <div className="px-6 py-3 border-b border-border bg-background flex items-center gap-2 overflow-x-auto">
+                <span className="text-xs font-medium text-muted-foreground mr-2">Templates:</span>
+                <button onClick={() => setConfigText(JSON.stringify(SAMPLE_CONFIG, null, 2))} className="text-xs px-3 py-1.5 rounded-full border border-border bg-muted/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 transition-colors whitespace-nowrap">Task Manager</button>
+                <button onClick={() => setConfigText(JSON.stringify(CRM_CONFIG, null, 2))} className="text-xs px-3 py-1.5 rounded-full border border-border bg-muted/50 hover:bg-green-500/10 hover:text-green-500 hover:border-green-500/30 transition-colors whitespace-nowrap">Sales CRM</button>
+                <button onClick={() => setConfigText(JSON.stringify(INVENTORY_CONFIG, null, 2))} className="text-xs px-3 py-1.5 rounded-full border border-border bg-muted/50 hover:bg-orange-500/10 hover:text-orange-500 hover:border-orange-500/30 transition-colors whitespace-nowrap">Inventory System</button>
               </div>
               
               {error && (

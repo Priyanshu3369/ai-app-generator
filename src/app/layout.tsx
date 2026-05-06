@@ -4,6 +4,8 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "AI App Generator — Build Apps from JSON Config",
   description: "Transform structured JSON configurations into fully working web applications with dynamic UI, REST APIs, PostgreSQL database, and authentication.",
+  manifest: "/manifest.json",
+  themeColor: "#0f172a",
 };
 
 export default function RootLayout({

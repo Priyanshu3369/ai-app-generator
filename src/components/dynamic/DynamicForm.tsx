@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Loader2, CheckCircle2, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface FieldConfig {
@@ -27,6 +27,11 @@ export default function DynamicForm({ fields, onSubmit, initialData = {}, submit
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showPasswords, setShowPasswords] = useState<Record<string, boolean>>({});
+
+  const togglePassword = (name: string) => {
+    setShowPasswords(prev => ({ ...prev, [name]: !prev[name] }));
+  };
 
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0) {
@@ -117,9 +122,23 @@ export default function DynamicForm({ fields, onSubmit, initialData = {}, submit
                   {!!formData[f.name] ? 'Enabled' : 'Disabled'}
                 </span>
               </label>
+            ) : f.type === 'password' ? (
+              <div className="relative">
+                <input
+                  type={showPasswords[f.name] ? 'text' : 'password'}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pr-10"
+                  required={f.required}
+                  placeholder={f.placeholder}
+                  value={(formData[f.name] as string) || ''}
+                  onChange={e => handleChange(f.name, e.target.value)}
+                />
+                <button type="button" onClick={() => togglePassword(f.name)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none">
+                  {showPasswords[f.name] ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
             ) : (
               <input
-                type={f.type === 'integer' || f.type === 'float' || f.type === 'currency' ? 'number' : f.type === 'date' ? 'date' : f.type === 'password' ? 'password' : 'text'}
+                type={f.type === 'integer' || f.type === 'float' || f.type === 'currency' ? 'number' : f.type === 'date' ? 'date' : 'text'}
                 step={f.type === 'float' || f.type === 'currency' ? '0.01' : '1'}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-shadow"
                 required={f.required}

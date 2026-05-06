@@ -53,6 +53,10 @@ export function processEventTriggers(
       message = message.replace(new RegExp(`{{${key}}}`, 'g'), String(value ?? ''));
     }
     createNotification(appId, userId, title, message, { model: eventModel, action: eventAction, recordId: record.id });
+    
+    // MOCK EMAIL TRIGGER
+    const recipient = userId ? `user_${userId.substring(0,6)}@app.local` : 'admin@app.local';
+    sendMockEmail(recipient, title, `<p>${message}</p>`).catch(() => {});
   }
 }
 

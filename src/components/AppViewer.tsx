@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Menu, X, LogOut, ChevronRight, LayoutDashboard, CheckSquare, 
   Package, Users, Settings, BarChart3, MessageSquare, Calendar,
-  FolderOpen, CreditCard, Ticket, ClipboardList, Briefcase, FileText
+  FolderOpen, CreditCard, Ticket, ClipboardList, Briefcase, FileText, Eye, EyeOff
 } from 'lucide-react';
 import PageRenderer from '@/components/dynamic/PageRenderer';
 import NotificationInbox from '@/components/dynamic/NotificationInbox';
@@ -38,6 +38,7 @@ export default function AppViewer() {
   const [authForm, setAuthForm] = useState({ email: '', password: '', name: '' });
   const [authError, setAuthError] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activePage, setActivePage] = useState(0);
@@ -164,7 +165,12 @@ export default function AppViewer() {
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Password</label>
-                <input type="password" required className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" value={authForm.password} onChange={e => setAuthForm(p => ({ ...p, password: e.target.value }))} placeholder="••••••••" />
+                <div className="relative">
+                  <input type={showPassword ? 'text' : 'password'} required className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pr-10" value={authForm.password} onChange={e => setAuthForm(p => ({ ...p, password: e.target.value }))} placeholder="••••••••" />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none">
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
               </div>
               <button type="submit" disabled={authLoading} className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-4 py-2 w-full mt-2 transition-all disabled:opacity-50">
                 {authLoading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : authMode === 'login' ? 'Sign In' : 'Create Account'}
@@ -329,13 +335,25 @@ export default function AppViewer() {
             
             {/* Breadcrumbs */}
             <div className="hidden sm:flex items-center text-sm font-medium text-muted-foreground">
-              <span className="hover:text-foreground cursor-pointer transition-colors">{config.appName}</span>
+              <span 
+                className="hover:text-foreground cursor-pointer transition-colors" 
+                onClick={() => { setActivePage(0); router.push(`/app/${appId}`); }}
+                title="Go to App Dashboard"
+              >
+                {config.appName}
+              </span>
               <ChevronRight size={16} className="mx-2 opacity-50" />
               <span className="text-foreground">{currentPage?.title || 'Unknown Route'}</span>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
+            <button 
+              onClick={() => { setActivePage(0); router.push(`/app/${appId}`); }} 
+              className="text-xs font-medium border border-border rounded-md px-3 py-1.5 hover:bg-secondary transition-colors hidden sm:flex items-center gap-1.5"
+            >
+              <LayoutDashboard size={14} /> Dashboard
+            </button>
             {config.notifications && <NotificationInbox appId={appId} token={token} />}
             <button onClick={() => router.push('/')} className="text-xs font-medium border border-border rounded-md px-3 py-1.5 hover:bg-secondary transition-colors hidden sm:block">
               Exit App
