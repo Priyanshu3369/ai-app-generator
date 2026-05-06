@@ -27,7 +27,7 @@ export async function GET(
       return Response.json({ success: false, error: `Model "${model}" not found` }, { status: 404 });
     }
 
-    const value = await aggregate(appId, model, type, field);
+    const value = await aggregate(appId, model, type, field, {}, config.appName);
     return Response.json({ success: true, data: { value } });
   } catch (error) {
     return Response.json({ success: false, error: (error as Error).message }, { status: 500 });

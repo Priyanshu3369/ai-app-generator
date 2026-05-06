@@ -1,5 +1,6 @@
 import { ModelConfig, FieldConfig, FieldType } from '../types';
 import { query } from './pool';
+import { slugify } from '../utils';
 
 const typeMapping: Record<FieldType, string> = {
   string: 'TEXT', text: 'TEXT', number: 'NUMERIC', integer: 'INTEGER',
@@ -28,8 +29,18 @@ function fieldToDDL(field: FieldConfig): string {
   return parts.join(' ');
 }
 
-export async function createTableForModel(appId: string, model: ModelConfig) {
-  const tableName = `app_${appId.replace(/-/g, '_')}_${model.tableName || model.name}`;
+export function getTableName(appId: string, modelName: string, appName?: string): string {
+  if (appName) {
+    const slug = slugify(appName).slice(0, 15);
+    const shortId = appId.replace(/-/g, '').slice(0, 8);
+    return `app_${slug}_${shortId}_${modelName.toLowerCase()}`;
+  }
+  // Legacy format for apps without appName context
+  return `app_${appId.replace(/-/g, '_')}_${modelName.toLowerCase()}`;
+}
+
+export async function createTableForModel(appId: string, model: ModelConfig, appName: string) {
+  const tableName = getTableName(appId, model.tableName || model.name, appName);
   const columns: string[] = model.fields.map(f => fieldToDDL(f));
 
   if (model.userScoped) {
@@ -68,15 +79,11 @@ export async function createTableForModel(appId: string, model: ModelConfig) {
   return tableName;
 }
 
-export async function createTablesForApp(appId: string, models: ModelConfig[]) {
+export async function createTablesForApp(appId: string, models: ModelConfig[], appName: string) {
   const tableMap: Record<string, string> = {};
   for (const model of models) {
-    const tableName = await createTableForModel(appId, model);
+    const tableName = await createTableForModel(appId, model, appName);
     tableMap[model.name] = tableName;
   }
   return tableMap;
-}
-
-export function getTableName(appId: string, modelName: string): string {
-  return `app_${appId.replace(/-/g, '_')}_${modelName.toLowerCase()}`;
 }

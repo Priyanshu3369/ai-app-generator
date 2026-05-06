@@ -1,10 +1,13 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "AI App Generator — Build Apps from JSON Config",
   description: "Transform structured JSON configurations into fully working web applications with dynamic UI, REST APIs, PostgreSQL database, and authentication.",
   manifest: "/manifest.json",
+};
+
+export const viewport: Viewport = {
   themeColor: "#0f172a",
 };
 

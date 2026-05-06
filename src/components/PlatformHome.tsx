@@ -261,7 +261,19 @@ export default function PlatformHome() {
           <p className="text-lg text-muted-foreground">Everything you need to ship production applications in seconds.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={{
+            hidden: { opacity: 0 },
+            show: {
+              opacity: 1,
+              transition: { staggerChildren: 0.1 }
+            }
+          }}
+        >
           {[
             { icon: <TableProperties />, title: 'Dynamic UI', desc: 'Forms, tables, and dashboards rendered automatically.' },
             { icon: <Server />, title: 'Auto REST APIs', desc: 'Secure CRUD endpoints generated instantly.' },
@@ -272,17 +284,21 @@ export default function PlatformHome() {
           ].map((f, i) => (
             <motion.div 
               key={i}
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-              className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-primary/50 transition-colors"
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                show: { opacity: 1, y: 0 }
+              }}
+              whileHover={{ y: -5, scale: 1.02 }}
+              className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5"
             >
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary group-hover:scale-110 transition-transform">
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
                 {f.icon}
               </div>
               <h3 className="mb-2 text-xl font-bold">{f.title}</h3>
               <p className="text-muted-foreground">{f.desc}</p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* Apps Section */}
@@ -315,9 +331,29 @@ export default function PlatformHome() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              variants={{
+                hidden: { opacity: 0 },
+                show: {
+                  opacity: 1,
+                  transition: { staggerChildren: 0.1 }
+                }
+              }}
+            >
               {apps.map(app => (
-                <div key={app.id} className="group rounded-xl border border-border bg-card p-6 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 flex flex-col">
+                <motion.div 
+                  key={app.id} 
+                  variants={{
+                    hidden: { opacity: 0, scale: 0.9 },
+                    show: { opacity: 1, scale: 1 }
+                  }}
+                  whileHover={{ y: -4 }}
+                  className="group rounded-xl border border-border bg-card p-6 shadow-sm hover:shadow-md transition-all flex flex-col"
+                >
                   <div className="flex justify-between items-start mb-4">
                     <h3 className="font-semibold text-lg truncate">{app.name}</h3>
                     <button onClick={() => handleDeleteApp(app.id)} className="text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity">
@@ -331,9 +367,9 @@ export default function PlatformHome() {
                       Launch <ChevronRight className="ml-1 h-4 w-4" />
                     </button>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           )}
         </div>
       </section>

@@ -29,17 +29,17 @@ interface ModelConfig {
   userScoped?: boolean;
 }
 
-export default function PageRenderer({ appId, components, models, token }: { appId: string, components: ComponentConfig[], models: ModelConfig[], token?: string }) {
+export default function PageRenderer({ appId, components, models, pages, token }: { appId: string, components: ComponentConfig[], models: ModelConfig[], pages: any[], token?: string }) {
   return (
     <div className="flex flex-col gap-8 w-full">
       {components.map((comp, idx) => (
-        <ComponentRenderer key={comp.id || idx} appId={appId} component={comp} models={models} token={token} />
+        <ComponentRenderer key={comp.id || idx} appId={appId} component={comp} models={models} pages={pages} token={token} />
       ))}
     </div>
   );
 }
 
-function ComponentRenderer({ appId, component, models, token }: { appId: string; component: ComponentConfig; models: ModelConfig[]; token?: string }) {
+function ComponentRenderer({ appId, component, models, pages, token }: { appId: string; component: ComponentConfig; models: ModelConfig[]; pages: any[]; token?: string }) {
   const [showForm, setShowForm] = useState(false);
   const [editRecord, setEditRecord] = useState<Record<string, unknown> | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -132,7 +132,7 @@ function ComponentRenderer({ appId, component, models, token }: { appId: string;
       return (
         <div className="flex flex-col gap-4">
           <h3 className="text-lg font-semibold tracking-tight px-1">{component.props?.title as string || 'Overview Metrics'}</h3>
-          <DynamicDashboard appId={appId} widgets={component.widgets || []} token={token} />
+          <DynamicDashboard appId={appId} widgets={component.widgets || []} token={token} pages={pages} />
         </div>
       );
     }
@@ -161,7 +161,7 @@ function ComponentRenderer({ appId, component, models, token }: { appId: string;
 
     case 'stats': {
       const widgets = (component.widgets || []).map(w => ({ ...w, type: 'stat' }));
-      return <DynamicDashboard appId={appId} widgets={widgets} token={token} />;
+      return <DynamicDashboard appId={appId} widgets={widgets} token={token} pages={pages} />;
     }
 
     default: {

@@ -142,7 +142,18 @@ export default function DynamicTable({ appId, model, columns, actions, onEdit, t
                 {actions && actions.length > 0 && <th className="px-6 py-3 font-semibold text-right">Actions</th>}
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
+            <motion.tbody 
+              className="divide-y divide-border"
+              initial="hidden"
+              animate="show"
+              variants={{
+                hidden: { opacity: 0 },
+                show: {
+                  opacity: 1,
+                  transition: { staggerChildren: 0.05 }
+                }
+              }}
+            >
               {data.length === 0 && !loading ? (
                 <tr>
                   <td colSpan={columns.length + (actions ? 1 : 0)} className="px-6 py-12 text-center text-muted-foreground">
@@ -152,9 +163,16 @@ export default function DynamicTable({ appId, model, columns, actions, onEdit, t
               ) : (
                 data.map((row, i) => (
                   <motion.tr 
-                    initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
                     key={row.id || i} 
-                    className="bg-card hover:bg-muted/30 transition-colors group"
+                    variants={{
+                      hidden: { opacity: 0, x: -10 },
+                      show: { opacity: 1, x: 0 }
+                    }}
+                    className={cn(
+                      "bg-card hover:bg-muted/30 transition-colors group",
+                      onEdit && "cursor-pointer"
+                    )}
+                    onClick={() => onEdit && onEdit(row)}
                   >
                     {columns.map(col => (
                       <td key={col.field} className="px-6 py-4 whitespace-nowrap">
@@ -162,7 +180,7 @@ export default function DynamicTable({ appId, model, columns, actions, onEdit, t
                       </td>
                     ))}
                     {actions && actions.length > 0 && (
-                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                      <td className="px-6 py-4 whitespace-nowrap text-right" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                           {actions.map(act => (
                             <button
@@ -183,7 +201,7 @@ export default function DynamicTable({ appId, model, columns, actions, onEdit, t
                   </motion.tr>
                 ))
               )}
-            </tbody>
+            </motion.tbody>
           </table>
         </div>
       </div>

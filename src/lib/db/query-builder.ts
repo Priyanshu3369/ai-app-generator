@@ -14,8 +14,8 @@ interface QueryOptions {
   userScoped?: boolean;
 }
 
-export async function findMany(appId: string, modelName: string, options: QueryOptions = {}) {
-  const tableName = getTableName(appId, modelName);
+export async function findMany(appId: string, modelName: string, options: QueryOptions = {}, appName?: string) {
+  const tableName = getTableName(appId, modelName, appName);
   const { page = 1, pageSize = 25, sortBy = 'created_at', sortOrder = 'desc', filters = {}, search, searchFields = [], userId, userScoped } = options;
   const conditions: string[] = [];
   const params: unknown[] = [];
@@ -59,8 +59,8 @@ export async function findMany(appId: string, modelName: string, options: QueryO
   };
 }
 
-export async function findOne(appId: string, modelName: string, id: string, userId?: string, userScoped?: boolean) {
-  const tableName = getTableName(appId, modelName);
+export async function findOne(appId: string, modelName: string, id: string, userId?: string, userScoped?: boolean, appName?: string) {
+  const tableName = getTableName(appId, modelName, appName);
   let sql = `SELECT * FROM "${tableName}" WHERE "id" = $1`;
   const params: unknown[] = [id];
   if (userScoped && userId) {
@@ -71,8 +71,8 @@ export async function findOne(appId: string, modelName: string, id: string, user
   return result.rows[0] || null;
 }
 
-export async function create(appId: string, modelName: string, data: Record<string, unknown>, userId?: string, userScoped?: boolean) {
-  const tableName = getTableName(appId, modelName);
+export async function create(appId: string, modelName: string, data: Record<string, unknown>, userId?: string, userScoped?: boolean, appName?: string) {
+  const tableName = getTableName(appId, modelName, appName);
   const record: Record<string, unknown> = { ...data, id: data.id || uuidv4() };
   if (userScoped && userId) {
     record.user_id = userId;
@@ -89,10 +89,10 @@ export async function create(appId: string, modelName: string, data: Record<stri
   return result.rows[0];
 }
 
-export async function update(appId: string, modelName: string, id: string, data: Record<string, unknown>, userId?: string, userScoped?: boolean) {
-  const tableName = getTableName(appId, modelName);
+export async function update(appId: string, modelName: string, id: string, data: Record<string, unknown>, userId?: string, userScoped?: boolean, appName?: string) {
+  const tableName = getTableName(appId, modelName, appName);
   const keys = Object.keys(data).filter(k => k !== 'id' && k !== 'created_at' && k !== 'updated_at' && data[k] !== undefined);
-  if (keys.length === 0) return findOne(appId, modelName, id);
+  if (keys.length === 0) return findOne(appId, modelName, id, userId, userScoped, appName);
 
   const setClauses = keys.map((k, i) => `"${k.replace(/[^a-zA-Z0-9_]/g, '')}" = $${i + 1}`);
   const values: unknown[] = keys.map(k => data[k]);
@@ -111,8 +111,8 @@ export async function update(appId: string, modelName: string, id: string, data:
   return result.rows[0] || null;
 }
 
-export async function remove(appId: string, modelName: string, id: string, userId?: string, userScoped?: boolean, softDelete?: boolean) {
-  const tableName = getTableName(appId, modelName);
+export async function remove(appId: string, modelName: string, id: string, userId?: string, userScoped?: boolean, softDelete?: boolean, appName?: string) {
+  const tableName = getTableName(appId, modelName, appName);
   const params: unknown[] = [id];
   let sql: string;
 
@@ -131,11 +131,11 @@ export async function remove(appId: string, modelName: string, id: string, userI
   return { deleted: true };
 }
 
-export async function bulkCreate(appId: string, modelName: string, records: Record<string, unknown>[], userId?: string, userScoped?: boolean) {
+export async function bulkCreate(appId: string, modelName: string, records: Record<string, unknown>[], userId?: string, userScoped?: boolean, appName?: string) {
   const results = [];
   for (const record of records) {
     try {
-      const created = await create(appId, modelName, record, userId, userScoped);
+      const created = await create(appId, modelName, record, userId, userScoped, appName);
       results.push({ success: true, data: created });
     } catch (error) {
       results.push({ success: false, error: (error as Error).message });
@@ -144,8 +144,8 @@ export async function bulkCreate(appId: string, modelName: string, records: Reco
   return results;
 }
 
-export async function aggregate(appId: string, modelName: string, aggType: string, field?: string, filters?: Record<string, unknown>) {
-  const tableName = getTableName(appId, modelName);
+export async function aggregate(appId: string, modelName: string, aggType: string, field?: string, filters?: Record<string, unknown>, appName?: string) {
+  const tableName = getTableName(appId, modelName, appName);
   const safeField = field ? `"${field.replace(/[^a-zA-Z0-9_]/g, '')}"` : '*';
   let aggFunc: string;
   switch (aggType) {

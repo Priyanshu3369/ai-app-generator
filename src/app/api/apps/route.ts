@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     );
 
     // Create database tables for all models
-    const tableMap = await createTablesForApp(appId, config.models);
+    const tableMap = await createTablesForApp(appId, config.models, config.appName);
 
     return Response.json({
       success: true,

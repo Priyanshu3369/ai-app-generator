@@ -97,7 +97,7 @@ export default function NotificationInbox({ appId, token }: { appId: string, tok
               ) : (
                 <div className="divide-y divide-border">
                   {notifications.map(n => (
-                    <div key={n.id} className={`p-4 transition-colors hover:bg-muted/50 ${n.status === 'unread' ? 'bg-primary/5' : ''}`}>
+                    <div key={n.id} className={`p-4 transition-colors hover:bg-muted/50 cursor-pointer ${n.status === 'unread' ? 'bg-primary/5' : ''}`}>
                       <div className="flex gap-3">
                         <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${n.status === 'unread' ? 'bg-primary' : 'bg-transparent'}`} />
                         <div className="flex-1 min-w-0">

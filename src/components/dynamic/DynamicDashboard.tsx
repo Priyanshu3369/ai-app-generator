@@ -1,10 +1,12 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { LayoutDashboard, Users, Activity, CreditCard, Box, TrendingUp, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export default function DynamicDashboard({ appId, widgets, token }: { appId: string, widgets: any[], token?: string }) {
+export default function DynamicDashboard({ appId, widgets, token, pages }: { appId: string, widgets: any[], token?: string, pages?: any[] }) {
+  const router = useRouter();
   const [data, setData] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
 
@@ -29,6 +31,15 @@ export default function DynamicDashboard({ appId, widgets, token }: { appId: str
     }
     loadData();
   }, [appId, widgets, token]);
+
+  const handleWidgetClick = (modelName?: string) => {
+    if (!modelName || !pages) return;
+    // Find a page that has a table for this model
+    const page = pages.find(p => p.components?.some((c: any) => c.type === 'table' && c.model === modelName));
+    if (page) {
+      router.push(`/app/${appId}${page.path === '/' ? '' : page.path}`);
+    }
+  };
 
   const getIcon = (name?: string) => {
     switch (name?.toLowerCase()) {
@@ -56,22 +67,36 @@ export default function DynamicDashboard({ appId, widgets, token }: { appId: str
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+    <motion.div 
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full"
+      initial="hidden"
+      animate="show"
+      variants={{
+        hidden: { opacity: 0 },
+        show: {
+          opacity: 1,
+          transition: { staggerChildren: 0.1 }
+        }
+      }}
+    >
       {widgets.map((w, i) => {
         if (w.type === 'stat') {
           return (
             <motion.div 
               key={i} 
-              initial={{ opacity: 0, y: 10 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: i * 0.1 }}
-              className="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group"
+              variants={{
+                hidden: { opacity: 0, y: 20, scale: 0.95 },
+                show: { opacity: 1, y: 0, scale: 1 }
+              }}
+              whileHover={{ y: -5, scale: 1.02 }}
+              onClick={() => handleWidgetClick(w.model)}
+              className="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-xl hover:border-primary/50 transition-all cursor-pointer relative overflow-hidden group active:scale-[0.98]"
             >
               <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
                 {React.cloneElement(getIcon(w.icon || w.title) as React.ReactElement, { size: 100 } as any)}
               </div>
               <div className="flex items-center gap-4 relative z-10">
-                <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center border", getColorClass(w.color))}>
+                <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center border transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-lg group-hover:shadow-primary/20", getColorClass(w.color))}>
                   {React.cloneElement(getIcon(w.icon || w.title) as React.ReactElement, { size: 24 } as any)}
                 </div>
                 <div>
@@ -90,12 +115,12 @@ export default function DynamicDashboard({ appId, widgets, token }: { appId: str
           );
         }
         return (
-          <div key={i} className="col-span-1 sm:col-span-2 lg:col-span-4 bg-card border border-border rounded-xl p-8 flex flex-col items-center justify-center text-muted-foreground min-h-[200px] border-dashed">
+          <div key={i} className="col-span-1 sm:col-span-2 lg:grid-cols-4 bg-card border border-border rounded-xl p-8 flex flex-col items-center justify-center text-muted-foreground min-h-[200px] border-dashed">
             <LayoutDashboard size={32} className="mb-4 opacity-50" />
             <p>Widget type <strong>{w.type}</strong> is not fully implemented.</p>
           </div>
         );
       })}
-    </div>
+    </motion.div>
   );
 }

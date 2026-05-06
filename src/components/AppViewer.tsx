@@ -210,13 +210,25 @@ export default function AppViewer() {
     <div className="flex h-screen bg-background overflow-hidden" style={{ '--primary': config.theme?.primaryColor || '240 5.9% 10%' } as React.CSSProperties}>
       
       {/* Desktop Sidebar */}
-      <aside className={cn("hidden md:flex flex-col border-r border-border bg-card transition-all duration-300 z-20", sidebarOpen ? "w-64" : "w-[72px]")}>
-        <div className="h-16 flex items-center justify-between px-4 border-b border-border">
+      <motion.aside 
+        initial={false}
+        animate={{ width: sidebarOpen ? 256 : 72 }}
+        className={cn("hidden md:flex flex-col border-r border-border bg-card transition-all duration-300 z-20 overflow-hidden")}
+      >
+        <div className="h-16 flex items-center justify-between px-4 border-b border-border shrink-0">
           <div className="flex items-center gap-3 overflow-hidden whitespace-nowrap">
             <div className="w-8 h-8 bg-primary text-primary-foreground rounded flex items-center justify-center font-bold flex-shrink-0">
               {config.appName[0].toUpperCase()}
             </div>
-            {sidebarOpen && <span className="font-semibold truncate">{config.appName}</span>}
+            {sidebarOpen && (
+              <motion.span 
+                initial={{ opacity: 0, x: -10 }} 
+                animate={{ opacity: 1, x: 0 }} 
+                className="font-semibold truncate"
+              >
+                {config.appName}
+              </motion.span>
+            )}
           </div>
         </div>
 
@@ -243,7 +255,7 @@ export default function AppViewer() {
         </div>
 
         {user && (
-          <div className="p-4 border-t border-border">
+          <div className="p-4 border-t border-border shrink-0">
             <div className={cn("flex items-center", sidebarOpen ? "justify-between" : "justify-center")}>
               {sidebarOpen && (
                 <div className="flex items-center gap-3 overflow-hidden">
@@ -262,7 +274,7 @@ export default function AppViewer() {
             </div>
           </div>
         )}
-      </aside>
+      </motion.aside>
 
       {/* Mobile Drawer Overlay */}
       <AnimatePresence>
@@ -364,33 +376,40 @@ export default function AppViewer() {
         {/* Page Content */}
         <div className="flex-1 overflow-y-auto p-4 lg:p-8">
           <div className="max-w-7xl mx-auto">
-            {currentPage ? (
-              <motion.div
-                key={activePage}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="mb-8">
-                  <h1 className="text-3xl font-bold tracking-tight">{currentPage.title}</h1>
-                </div>
-                <PageRenderer
-                  appId={appId}
-                  components={currentPage.components as any[]}
-                  models={config.models as any[]}
-                  token={token}
-                />
-              </motion.div>
-            ) : (
-              <div className="h-[60vh] flex flex-col items-center justify-center border-2 border-dashed border-border rounded-2xl bg-card">
-                <LayoutDashboard className="w-12 h-12 text-muted-foreground mb-4" />
-                <h2 className="text-xl font-semibold mb-2">Page Not Found</h2>
-                <p className="text-muted-foreground mb-6">This route does not exist in the application configuration.</p>
-                <button onClick={() => router.push('/')} className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4">
-                  Return Home
-                </button>
-              </div>
-            )}
+            <AnimatePresence mode="wait">
+              {currentPage ? (
+                <motion.div
+                  key={currentPath}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <div className="mb-8">
+                    <h1 className="text-3xl font-bold tracking-tight">{currentPage.title}</h1>
+                  </div>
+                  <PageRenderer
+                    appId={appId}
+                    components={currentPage.components as any[]}
+                    models={config.models as any[]}
+                    pages={config.pages as any[]}
+                    token={token}
+                  />
+                </motion.div>
+              ) : (
+                <motion.div 
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                  className="h-[60vh] flex flex-col items-center justify-center border-2 border-dashed border-border rounded-2xl bg-card"
+                >
+                  <LayoutDashboard className="w-12 h-12 text-muted-foreground mb-4" />
+                  <h2 className="text-xl font-semibold mb-2">Page Not Found</h2>
+                  <p className="text-muted-foreground mb-6">This route does not exist in the application configuration.</p>
+                  <button onClick={() => router.push('/')} className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4">
+                    Return Home
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </main>

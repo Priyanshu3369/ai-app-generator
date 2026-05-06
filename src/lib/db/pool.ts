@@ -62,14 +62,20 @@ export async function initPlatformTables() {
   try {
     await query('ALTER TABLE _platform_users DROP CONSTRAINT IF EXISTS _platform_users_email_key');
   } catch (e) {}
-  try {
-    // Using Postgres 15+ NULLS NOT DISTINCT if supported, otherwise fallback to standard unique
-    await query('ALTER TABLE _platform_users ADD CONSTRAINT _platform_users_email_app_id_key UNIQUE NULLS NOT DISTINCT (email, app_id)');
-  } catch (e) {
-    try {
-      await query('ALTER TABLE _platform_users ADD CONSTRAINT _platform_users_email_app_id_key UNIQUE (email, app_id)');
-    } catch (fallbackErr) {}
-  }
+
+  // Safely add unique constraint using DO block
+  await query(`
+    DO $$ 
+    BEGIN 
+      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = '_platform_users_email_app_id_key') THEN
+        BEGIN
+          ALTER TABLE _platform_users ADD CONSTRAINT _platform_users_email_app_id_key UNIQUE NULLS NOT DISTINCT (email, app_id);
+        EXCEPTION WHEN others THEN
+          ALTER TABLE _platform_users ADD CONSTRAINT _platform_users_email_app_id_key UNIQUE (email, app_id);
+        END;
+      END IF;
+    END $$;
+  `);
   await query(`
     CREATE TABLE IF NOT EXISTS _platform_notifications (
       id TEXT PRIMARY KEY,
