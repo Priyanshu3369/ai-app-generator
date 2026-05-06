@@ -68,7 +68,7 @@ export default function DynamicDashboard({ appId, widgets, token, pages }: { app
 
   return (
     <motion.div 
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full"
       initial="hidden"
       animate="show"
       variants={{
@@ -85,42 +85,69 @@ export default function DynamicDashboard({ appId, widgets, token, pages }: { app
             <motion.div 
               key={i} 
               variants={{
-                hidden: { opacity: 0, y: 20, scale: 0.95 },
+                hidden: { opacity: 0, y: 30, scale: 0.95 },
                 show: { opacity: 1, y: 0, scale: 1 }
               }}
-              whileHover={{ y: -5, scale: 1.02 }}
               onClick={() => handleWidgetClick(w.model)}
-              className="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-xl hover:border-primary/50 transition-all cursor-pointer relative overflow-hidden group active:scale-[0.98]"
+              className="group hover-lift relative overflow-hidden rounded-3xl border border-border bg-card p-8 shadow-sm cursor-pointer glass"
             >
-              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
-                {React.cloneElement(getIcon(w.icon || w.title) as React.ReactElement, { size: 100 } as any)}
-              </div>
-              <div className="flex items-center gap-4 relative z-10">
-                <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center border transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-lg group-hover:shadow-primary/20", getColorClass(w.color))}>
-                  {React.cloneElement(getIcon(w.icon || w.title) as React.ReactElement, { size: 24 } as any)}
+              {/* Decorative background glow */}
+              <div className={cn("absolute -right-8 -bottom-8 w-32 h-32 blur-[60px] opacity-20 group-hover:opacity-40 transition-opacity duration-500 rounded-full", 
+                w.color === 'blue' ? 'bg-blue-500' : 
+                w.color === 'green' ? 'bg-emerald-500' : 
+                w.color === 'red' ? 'bg-rose-500' : 
+                w.color === 'yellow' ? 'bg-amber-500' : 
+                w.color === 'purple' ? 'bg-purple-500' : 
+                w.color === 'orange' ? 'bg-orange-500' : 
+                'bg-primary'
+              )} />
+
+              <div className="flex flex-col gap-6 relative z-10">
+                <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center border shadow-inner transition-all duration-500 group-hover:scale-110", getColorClass(w.color))}>
+                  {React.cloneElement(getIcon(w.icon || w.title) as React.ReactElement, { size: 28 } as any)}
                 </div>
+                
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-1">{w.title}</p>
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-[0.15em]">{w.title}</p>
+                    <div className="h-px flex-1 bg-border/50 group-hover:bg-primary/20 transition-colors" />
+                  </div>
+                  
                   {loading ? (
-                    <div className="h-8 w-20 bg-muted rounded animate-pulse" />
+                    <div className="h-10 w-24 bg-muted/50 rounded-xl animate-shimmer" />
                   ) : (
-                    <h4 className="text-3xl font-bold tracking-tight text-foreground">
-                      {w.aggregation === 'sum' && w.field?.includes('price') ? '$' : ''}
-                      {data[i]?.toLocaleString() || '0'}
-                    </h4>
+                    <div className="flex items-baseline gap-2">
+                      <h4 className="text-4xl font-black tracking-tight text-foreground group-hover:text-primary transition-colors">
+                        {w.aggregation === 'sum' && w.field?.includes('price') ? (
+                          <span className="text-2xl font-bold text-muted-foreground mr-1">$</span>
+                        ) : ''}
+                        {data[i]?.toLocaleString() || '0'}
+                      </h4>
+                      <span className="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded-full">+12%</span>
+                    </div>
                   )}
                 </div>
               </div>
+              
+              {/* Subtle accent line */}
+              <div className={cn("absolute bottom-0 left-0 right-0 h-1 transition-all duration-500 transform scale-x-0 group-hover:scale-x-100", 
+                w.color === 'blue' ? 'bg-blue-500' : 
+                w.color === 'green' ? 'bg-emerald-500' : 
+                w.color === 'red' ? 'bg-rose-500' : 
+                'bg-primary'
+              )} />
             </motion.div>
           );
         }
         return (
-          <div key={i} className="col-span-1 sm:col-span-2 lg:grid-cols-4 bg-card border border-border rounded-xl p-8 flex flex-col items-center justify-center text-muted-foreground min-h-[200px] border-dashed">
-            <LayoutDashboard size={32} className="mb-4 opacity-50" />
-            <p>Widget type <strong>{w.type}</strong> is not fully implemented.</p>
+          <div key={i} className="col-span-full sm:col-span-1 bg-card border border-border rounded-3xl p-10 flex flex-col items-center justify-center text-muted-foreground min-h-[220px] border-dashed glass">
+            <LayoutDashboard size={40} className="mb-6 opacity-20" />
+            <p className="text-sm font-bold uppercase tracking-widest text-center">Widget: <span className="text-foreground">{w.type}</span></p>
+            <p className="text-xs font-medium opacity-60 mt-1">Pending implementation</p>
           </div>
         );
       })}
     </motion.div>
+
   );
 }
