@@ -64,8 +64,9 @@ export async function DELETE(
       const models = config.models || [];
       
       // 2. Drop all app-specific data tables
+      const { getTableName } = await import('@/lib/db/schema-builder');
       for (const model of models) {
-        const tableName = `app_${appId.replace(/-/g, '_')}_${(model.tableName || model.name).toLowerCase()}`;
+        const tableName = getTableName(appId, model.name, config.appName);
         await query(`DROP TABLE IF EXISTS "${tableName}" CASCADE`);
       }
     }
