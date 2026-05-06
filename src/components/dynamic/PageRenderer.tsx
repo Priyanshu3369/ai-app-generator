@@ -173,7 +173,7 @@ function ComponentRenderer({ appId, component, models, pages, token }: { appId: 
             <code className="text-xs bg-destructive/10 px-2 py-1 rounded">{component.type}</code>
             {component.children && (
               <div className="mt-4 flex flex-col gap-4">
-                {component.children.map((child, i) => <ComponentRenderer key={i} appId={appId} component={child} models={models} token={token} />)}
+                {component.children.map((child, i) => <ComponentRenderer key={i} appId={appId} component={child} models={models} pages={pages} token={token} />)}
               </div>
             )}
           </div>
