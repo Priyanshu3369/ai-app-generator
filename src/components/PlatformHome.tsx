@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Terminal, Rocket, Database, Lock, TableProperties, Bell, 
-  Trash2, ChevronRight, Play, Server, Code2, Plus, Grip, X 
+  Trash2, ChevronRight, Play, Server, Code2, Plus, Grip 
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -197,21 +197,21 @@ export default function PlatformHome() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground overflow-x-hidden selection:bg-primary/20">
+    <div className="min-h-screen flex flex-col bg-background text-foreground overflow-x-hidden">
       {/* Top Navbar */}
-      <nav className="sticky top-0 z-50 w-full border-b border-border/40 glass">
-        <div className="container-px mx-auto flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2.5 font-bold text-xl tracking-tight">
-            <div className="w-9 h-9 bg-primary text-primary-foreground rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
-              <Terminal size={20} />
+      <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto flex h-16 items-center px-4 justify-between">
+          <div className="flex items-center gap-2 font-bold text-lg tracking-tight">
+            <div className="w-8 h-8 bg-primary text-primary-foreground rounded-lg flex items-center justify-center">
+              <Terminal size={18} />
             </div>
-            <span className="text-gradient-primary">AI App Generator</span>
+            AI App Generator
           </div>
-          <div className="flex items-center gap-2 sm:gap-4">
-            <a href="#apps" className="hidden sm:inline-block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2">My Apps</a>
+          <div className="flex items-center gap-4">
+            <a href="#apps" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">My Apps</a>
             <button 
               onClick={() => { setShowEditor(true); setTimeout(() => document.getElementById('builder')?.scrollIntoView({ behavior: 'smooth' }), 100); }}
-              className="inline-flex items-center justify-center rounded-xl text-sm font-semibold transition-all focus-ring bg-primary text-primary-foreground shadow-md hover:bg-primary/90 hover:shadow-lg h-9 px-4 sm:px-6"
+              className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
             >
               Start Building
             </button>
@@ -220,33 +220,33 @@ export default function PlatformHome() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative w-full pt-20 pb-24 sm:pt-32 sm:pb-40 flex flex-col items-center justify-center text-center container-px">
-        <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:32px_32px]">
-          <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[400px] w-[400px] rounded-full bg-primary/10 opacity-30 blur-[120px] animate-pulse-glow"></div>
+      <section className="relative w-full pt-24 pb-32 flex flex-col items-center justify-center text-center px-4">
+        <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]">
+          <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-primary/20 opacity-50 blur-[100px]"></div>
         </div>
 
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <div className="inline-flex items-center rounded-full border border-border/50 glass px-4 py-1.5 text-xs font-semibold mb-8 tracking-wide">
-            <span className="flex h-2 w-2 rounded-full bg-primary mr-2.5 animate-pulse"></span>
-            PRODUCTION READY v1.0
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+          <div className="inline-flex items-center rounded-full border border-border bg-muted/50 px-3 py-1 text-sm mb-6 backdrop-blur-sm">
+            <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse"></span>
+            Production Ready v1.0
           </div>
-          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tight max-w-5xl mb-8 leading-[1.1]">
-            Build apps at the speed of <span className="text-gradient-vibrant">thought</span>
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight max-w-4xl mb-6">
+            Generate apps from <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">JSON Config</span>
           </h1>
-          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed font-medium">
-            Transform simple JSON into full-stack, enterprise-grade web applications. Instant deployment with UI, DB, and Auth included.
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
+            Transform structured JSON into fully working, enterprise-grade web applications instantly. UI, database, REST APIs, and authentication included.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button 
               onClick={() => { setShowEditor(true); setTimeout(() => document.getElementById('builder')?.scrollIntoView({ behavior: 'smooth' }), 100); }}
-              className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl text-base font-bold transition-all focus-ring bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 hover:-translate-y-1 h-14 px-10"
+              className="inline-flex items-center justify-center rounded-lg text-base font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring bg-primary text-primary-foreground shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5 h-12 px-8"
             >
-              <Rocket className="mr-2.5 h-5 w-5" /> Initialize Project
+              <Rocket className="mr-2 h-5 w-5" /> Initialize Project
             </button>
             <a 
               href="#features" 
-              className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl text-base font-bold transition-all focus-ring border-2 border-border bg-card/50 hover:bg-muted h-14 px-10 glass"
+              className="inline-flex items-center justify-center rounded-lg text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring border border-input bg-background hover:bg-accent hover:text-accent-foreground h-12 px-8"
             >
               Explore Features
             </a>
@@ -255,17 +255,17 @@ export default function PlatformHome() {
       </section>
 
       {/* Features Bento Grid */}
-      <section id="features" className="container-px mx-auto section-py">
-        <div className="text-center mb-20">
-          <h2 className="text-3xl sm:text-5xl font-bold tracking-tight mb-5">Enterprise grade core</h2>
-          <p className="text-lg text-muted-foreground max-w-xl mx-auto">Everything you need to ship production applications in seconds, without writing a single line of boilerplate.</p>
+      <section id="features" className="container mx-auto px-4 py-24">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">Enterprise capabilities out of the box</h2>
+          <p className="text-lg text-muted-foreground">Everything you need to ship production applications in seconds.</p>
         </div>
 
         <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-7xl mx-auto"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto"
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true }}
           variants={{
             hidden: { opacity: 0 },
             show: {
@@ -275,12 +275,12 @@ export default function PlatformHome() {
           }}
         >
           {[
-            { icon: <TableProperties />, title: 'Dynamic UI', desc: 'Auto-rendered forms, tables, and dashboards that scale with your data.' },
-            { icon: <Server />, title: 'Auto REST APIs', desc: 'Secure, high-performance CRUD endpoints generated for every model.' },
-            { icon: <Database />, title: 'Live Database', desc: 'Dynamic PostgreSQL schema evolution powered by our DDL engine.' },
-            { icon: <Lock />, title: 'Pro Auth', desc: 'Production-ready JWT authentication with deep tenant isolation.' },
-            { icon: <Grip />, title: 'Data Tools', desc: 'Smart CSV imports and bulk management tools out of the box.' },
-            { icon: <Bell />, title: 'Events Engine', desc: 'Real-time notifications and transactional email triggers.' },
+            { icon: <TableProperties />, title: 'Dynamic UI', desc: 'Forms, tables, and dashboards rendered automatically.' },
+            { icon: <Server />, title: 'Auto REST APIs', desc: 'Secure CRUD endpoints generated instantly.' },
+            { icon: <Database />, title: 'PostgreSQL DB', desc: 'Tables created and evolved dynamically via DDL.' },
+            { icon: <Lock />, title: 'Authentication', desc: 'JWT auth with signup, login, and tenant isolation.' },
+            { icon: <Grip />, title: 'CSV Import', desc: 'Interactive uploads with smart column mapping.' },
+            { icon: <Bell />, title: 'Notifications', desc: 'Event-triggered alerts and mock email integration.' },
           ].map((f, i) => (
             <motion.div 
               key={i}
@@ -288,56 +288,51 @@ export default function PlatformHome() {
                 hidden: { opacity: 0, y: 20 },
                 show: { opacity: 1, y: 0 }
               }}
-              className="group hover-lift relative overflow-hidden rounded-3xl border border-border bg-card/40 p-8 sm:p-10"
+              whileHover={{ y: -5, scale: 1.02 }}
+              className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5"
             >
-              <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 shadow-inner">
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
                 {f.icon}
               </div>
-              <h3 className="mb-3 text-2xl font-bold">{f.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">{f.desc}</p>
+              <h3 className="mb-2 text-xl font-bold">{f.title}</h3>
+              <p className="text-muted-foreground">{f.desc}</p>
             </motion.div>
           ))}
         </motion.div>
       </section>
 
       {/* Apps Section */}
-      <section id="apps" className="border-y border-border bg-muted/20 section-py">
-        <div className="container-px mx-auto max-w-7xl">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-12 text-center sm:text-left">
-            <div>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">My Workspaces</h2>
-              <p className="text-muted-foreground font-medium">Manage your active deployments and app configurations.</p>
-            </div>
+      <section id="apps" className="border-t border-border bg-muted/30 py-24">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="flex items-center justify-between mb-10">
+            <h2 className="text-3xl font-bold tracking-tight">Your Workspaces</h2>
             <button 
               onClick={() => { setShowEditor(true); setTimeout(() => document.getElementById('builder')?.scrollIntoView({ behavior: 'smooth' }), 100); }}
-              className="inline-flex items-center text-sm font-bold text-primary bg-primary/10 px-4 py-2 rounded-full hover:bg-primary/20 transition-all"
+              className="inline-flex items-center text-sm font-medium text-primary hover:underline"
             >
-              <Plus className="mr-1.5 h-4 w-4" /> Create New Workspace
+              <Plus className="mr-1 h-4 w-4" /> New Workspace
             </button>
           </div>
 
           {loadingApps ? (
-            <div className="flex flex-col items-center justify-center py-20 gap-4">
-              <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-              <span className="text-sm font-semibold text-muted-foreground animate-pulse">Loading Workspaces...</span>
-            </div>
+            <div className="flex justify-center p-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>
           ) : apps.length === 0 ? (
-            <div className="text-center rounded-3xl border-2 border-dashed border-border p-12 sm:p-20 bg-card/50 glass">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 mb-6">
-                <Code2 className="h-8 w-8 text-primary" />
+            <div className="text-center rounded-2xl border border-dashed border-border p-12 bg-card">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 mb-4">
+                <Code2 className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="text-2xl font-bold mb-3">Launch your first app</h3>
-              <p className="text-muted-foreground mb-10 max-w-md mx-auto font-medium leading-relaxed">Your list of workspaces is currently empty. Use the JSON engine below to initialize your first deployment.</p>
+              <h3 className="text-lg font-semibold mb-2">No apps created yet</h3>
+              <p className="text-muted-foreground mb-6">Create your first application using the JSON config editor.</p>
               <button 
                 onClick={() => { setShowEditor(true); setTimeout(() => document.getElementById('builder')?.scrollIntoView({ behavior: 'smooth' }), 100); }}
-                className="inline-flex items-center justify-center rounded-2xl text-base font-bold bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:bg-primary/90 h-12 px-10"
+                className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-4"
               >
-                Open Editor
+                Create App
               </button>
             </div>
           ) : (
             <motion.div 
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
               initial="hidden"
               whileInView="show"
               viewport={{ once: true }}
@@ -353,28 +348,23 @@ export default function PlatformHome() {
                 <motion.div 
                   key={app.id} 
                   variants={{
-                    hidden: { opacity: 0, scale: 0.95 },
+                    hidden: { opacity: 0, scale: 0.9 },
                     show: { opacity: 1, scale: 1 }
                   }}
-                  className="group hover-lift rounded-3xl border border-border bg-card p-8 shadow-sm flex flex-col"
+                  whileHover={{ y: -4 }}
+                  className="group rounded-xl border border-border bg-card p-6 shadow-sm hover:shadow-md transition-all flex flex-col"
                 >
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="p-3 bg-secondary rounded-2xl">
-                      <Rocket className="h-5 w-5 text-primary" />
-                    </div>
-                    <button onClick={() => handleDeleteApp(app.id)} className="text-muted-foreground hover:text-destructive p-2 rounded-xl hover:bg-destructive/10 transition-all opacity-0 sm:opacity-100 sm:group-hover:opacity-100">
-                      <Trash2 className="h-5 w-5" />
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="font-semibold text-lg truncate">{app.name}</h3>
+                    <button onClick={() => handleDeleteApp(app.id)} className="text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
-                  <h3 className="font-bold text-2xl truncate mb-3">{app.name}</h3>
-                  <p className="text-muted-foreground flex-grow mb-8 line-clamp-2 font-medium leading-relaxed">{app.description}</p>
-                  <div className="flex items-center justify-between pt-6 border-t border-border">
-                    <div className="flex flex-col">
-                      <span className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground mb-0.5">Created</span>
-                      <span className="text-xs font-bold">{new Date(app.created_at).toLocaleDateString()}</span>
-                    </div>
-                    <button onClick={() => router.push(`/app/${app.id}`)} className="inline-flex items-center justify-center rounded-xl text-sm font-bold bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground h-10 px-5 transition-all">
-                      Launch App
+                  <p className="text-sm text-muted-foreground flex-grow mb-6 line-clamp-2">{app.description}</p>
+                  <div className="flex items-center justify-between pt-4 border-t border-border">
+                    <span className="text-xs text-muted-foreground">{new Date(app.created_at).toLocaleDateString()}</span>
+                    <button onClick={() => router.push(`/app/${app.id}`)} className="inline-flex items-center text-sm font-medium text-primary hover:text-primary/80">
+                      Launch <ChevronRight className="ml-1 h-4 w-4" />
                     </button>
                   </div>
                 </motion.div>
@@ -389,81 +379,66 @@ export default function PlatformHome() {
         {showEditor && (
           <motion.section 
             id="builder"
-            initial={{ opacity: 0, y: 50 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            exit={{ opacity: 0, y: 50 }}
-            className="container-px mx-auto section-py max-w-6xl"
+            initial={{ opacity: 0, height: 0 }} 
+            animate={{ opacity: 1, height: 'auto' }} 
+            exit={{ opacity: 0, height: 0 }}
+            className="container mx-auto px-4 py-24 max-w-5xl"
           >
-            <div className="rounded-[2.5rem] border border-border bg-card shadow-2xl overflow-hidden glass">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-8 py-6 border-b border-border bg-muted/30">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
-                    <Code2 className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <h2 className="font-bold text-xl leading-none mb-1">JSON Configuration</h2>
-                    <p className="text-xs font-medium text-muted-foreground">Define your application schema</p>
-                  </div>
+            <div className="rounded-2xl border border-border bg-card shadow-xl overflow-hidden">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-muted/50">
+                <div className="flex items-center gap-2">
+                  <Code2 className="h-5 w-5 text-primary" />
+                  <h2 className="font-semibold text-lg">JSON Configuration</h2>
                 </div>
                 <button 
                   onClick={handleCreate} 
                   disabled={creating}
-                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl text-base font-bold bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 h-12 px-8 disabled:opacity-50 transition-all"
+                  className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 disabled:opacity-50"
                 >
-                  {creating ? <div className="w-5 h-5 border-3 border-white/20 border-t-white rounded-full animate-spin mr-3" /> : <Play className="mr-2.5 h-5 w-5 fill-current" />}
+                  {creating ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" /> : <Play className="mr-2 h-4 w-4" />}
                   Deploy Engine
                 </button>
               </div>
               
-              <div className="px-8 py-4 border-b border-border bg-background/50 flex items-center gap-2 overflow-x-auto no-scrollbar">
-                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest mr-4">Templates</span>
-                <button onClick={() => setConfigText(JSON.stringify(SAMPLE_CONFIG, null, 2))} className="text-xs font-bold px-4 py-2 rounded-xl border border-border bg-card hover:border-primary/50 hover:text-primary transition-all whitespace-nowrap">Task Manager</button>
-                <button onClick={() => setConfigText(JSON.stringify(CRM_CONFIG, null, 2))} className="text-xs font-bold px-4 py-2 rounded-xl border border-border bg-card hover:border-green-500/50 hover:text-green-500 transition-all whitespace-nowrap">Sales CRM</button>
-                <button onClick={() => setConfigText(JSON.stringify(INVENTORY_CONFIG, null, 2))} className="text-xs font-bold px-4 py-2 rounded-xl border border-border bg-card hover:border-orange-500/50 hover:text-orange-500 transition-all whitespace-nowrap">Inventory System</button>
+              <div className="px-6 py-3 border-b border-border bg-background flex items-center gap-2 overflow-x-auto">
+                <span className="text-xs font-medium text-muted-foreground mr-2">Templates:</span>
+                <button onClick={() => setConfigText(JSON.stringify(SAMPLE_CONFIG, null, 2))} className="text-xs px-3 py-1.5 rounded-full border border-border bg-muted/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 transition-colors whitespace-nowrap">Task Manager</button>
+                <button onClick={() => setConfigText(JSON.stringify(CRM_CONFIG, null, 2))} className="text-xs px-3 py-1.5 rounded-full border border-border bg-muted/50 hover:bg-green-500/10 hover:text-green-500 hover:border-green-500/30 transition-colors whitespace-nowrap">Sales CRM</button>
+                <button onClick={() => setConfigText(JSON.stringify(INVENTORY_CONFIG, null, 2))} className="text-xs px-3 py-1.5 rounded-full border border-border bg-muted/50 hover:bg-orange-500/10 hover:text-orange-500 hover:border-orange-500/30 transition-colors whitespace-nowrap">Inventory System</button>
               </div>
               
               {error && (
-                <div className="px-8 py-4 bg-destructive/10 border-b border-destructive/20 text-destructive text-sm font-bold flex items-center gap-2">
-                  <X className="h-4 w-4" /> {error}
+                <div className="px-6 py-3 bg-destructive/10 border-b border-destructive/20 text-destructive text-sm font-medium">
+                  {error}
                 </div>
               )}
 
-              <div className="relative group">
-                <div className="absolute left-0 top-0 bottom-0 w-12 bg-muted/20 border-r border-border hidden sm:flex flex-col items-center py-6 text-[10px] font-bold text-muted-foreground/50 select-none pointer-events-none">
-                  {configText.split('\n').map((_, i) => <div key={i} className="h-6 leading-6">{i + 1}</div>)}
+              <div className="relative">
+                <div className="absolute left-0 top-0 bottom-0 w-12 bg-muted/30 border-r border-border flex flex-col items-center py-4 text-xs text-muted-foreground select-none pointer-events-none">
+                  {configText.split('\n').map((_, i) => <div key={i} className="h-6">{i + 1}</div>)}
                 </div>
                 <textarea
-                  className="w-full h-[500px] sm:h-[650px] p-6 sm:pl-16 bg-[#010409] text-[#c9d1d9] font-mono text-sm focus:outline-none resize-none leading-6 selection:bg-primary/30"
+                  className="w-full h-[600px] p-4 pl-16 bg-[#0d1117] text-[#c9d1d9] font-mono text-sm focus:outline-none resize-y leading-6"
                   value={configText}
                   onChange={e => setConfigText(e.target.value)}
                   spellCheck={false}
                 />
-                <div className="absolute right-6 bottom-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="text-[10px] font-bold text-muted-foreground bg-card/80 px-2 py-1 rounded border border-border glass">JSON Mode</div>
-                </div>
               </div>
             </div>
           </motion.section>
         )}
       </AnimatePresence>
 
-      <footer className="border-t border-border mt-auto bg-card/50 glass">
-        <div className="container-px mx-auto py-12 flex flex-col md:flex-row items-center justify-between gap-6 text-sm font-medium text-muted-foreground">
-          <div className="flex items-center gap-2.5 font-bold text-foreground">
-            <div className="w-6 h-6 bg-primary/10 text-primary rounded flex items-center justify-center">
-              <Terminal size={14} />
-            </div>
-            AI App Generator
-          </div>
-          <p>© {new Date().getFullYear()} All rights reserved. Built for creators.</p>
-          <div className="flex items-center gap-8">
-            <a href="#" className="hover:text-primary transition-colors">Terms</a>
-            <a href="#" className="hover:text-primary transition-colors">Privacy</a>
-            <a href="#" className="hover:text-primary transition-colors">Documentation</a>
+      <footer className="border-t border-border mt-auto bg-background">
+        <div className="container mx-auto px-4 py-8 flex flex-col md:flex-row items-center justify-between text-sm text-muted-foreground">
+          <p>© {new Date().getFullYear()} AI App Generator. All rights reserved.</p>
+          <div className="flex items-center gap-4 mt-4 md:mt-0">
+            <a href="#" className="hover:text-foreground">Terms</a>
+            <a href="#" className="hover:text-foreground">Privacy</a>
+            <a href="#" className="hover:text-foreground">Docs</a>
           </div>
         </div>
       </footer>
     </div>
-
   );
 }

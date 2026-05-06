@@ -145,81 +145,22 @@
   animation: pulse-glow 3s ease-in-out infinite;
 }
 
-/* Premium Glassmorphism */
+/* Glassmorphism utility */
 .glass {
-  @apply bg-background/60 backdrop-blur-xl border-border/50 shadow-[0_8px_32px_0_rgba(0,0,0,0.08)];
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .dark .glass {
-  @apply bg-background/40 backdrop-blur-xl border-white/5 shadow-[0_8px_32px_0_rgba(0,0,0,0.2)];
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Shimmer Animation */
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+/* Custom Gradients */
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
-
-.animate-shimmer {
-  position: relative;
-  overflow: hidden;
-}
-
-.animate-shimmer::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.05),
-    transparent
-  );
-  animation: shimmer 2s infinite;
-}
-
-.dark .animate-shimmer::after {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.03),
-    transparent
-  );
-}
-
-/* Text Gradient Utilities */
-.text-gradient-primary {
-  @apply bg-clip-text text-transparent bg-gradient-to-br from-foreground to-foreground/60;
-}
-
-.text-gradient-vibrant {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500;
-}
-
-/* Custom Card Hover Effects */
-.hover-lift {
-  @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/5 active:scale-[0.98];
-}
-
-/* Responsive Table container */
-.responsive-table-container {
-  @apply w-full overflow-x-auto rounded-xl border border-border bg-card shadow-sm;
-}
-
-/* Mobile responsive padding helpers */
-.container-px {
-  @apply px-4 sm:px-6 lg:px-8;
-}
-
-.section-py {
-  @apply py-8 sm:py-12 lg:py-16;
-}
-
-/* Modern focus ring */
-.focus-ring {
-  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
-}
-

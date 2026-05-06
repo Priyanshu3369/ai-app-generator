@@ -118,23 +118,20 @@ export default function DynamicTable({ appId, model, columns, actions, onEdit, t
         </div>
       )}
 
-      {/* Table/Card View */}
-      <div className="rounded-2xl border border-border overflow-hidden bg-card/50 glass relative min-h-[200px]">
+      <div className="rounded-md border border-border overflow-hidden bg-card relative">
         {loading && data.length === 0 && (
           <div className="absolute inset-0 bg-background/50 backdrop-blur-[1px] z-10 flex items-center justify-center">
-            <RefreshCw className="w-8 h-8 animate-spin text-primary" />
+            <RefreshCw className="w-6 h-6 animate-spin text-primary" />
           </div>
         )}
-
-        {/* Desktop Table View */}
-        <div className="hidden md:block overflow-x-auto">
+        <div className="overflow-x-auto">
           <table className="w-full text-sm text-left">
-            <thead className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold bg-muted/30 border-b border-border">
+            <thead className="text-xs text-muted-foreground uppercase bg-muted/40 border-b border-border">
               <tr>
                 {columns.map(col => (
-                  <th key={col.field} className="px-6 py-4 font-bold whitespace-nowrap">
+                  <th key={col.field} className="px-6 py-3 font-semibold whitespace-nowrap">
                     <div 
-                      className={cn("flex items-center gap-1.5", col.sortable !== false && "cursor-pointer hover:text-foreground transition-colors")} 
+                      className={cn("flex items-center gap-1", col.sortable !== false && "cursor-pointer hover:text-foreground transition-colors")} 
                       onClick={() => col.sortable !== false && handleSort(col.field)}
                     >
                       {col.header}
@@ -142,25 +139,25 @@ export default function DynamicTable({ appId, model, columns, actions, onEdit, t
                     </div>
                   </th>
                 ))}
-                {actions && actions.length > 0 && <th className="px-6 py-4 font-bold text-right">Actions</th>}
+                {actions && actions.length > 0 && <th className="px-6 py-3 font-semibold text-right">Actions</th>}
               </tr>
             </thead>
             <motion.tbody 
-              className="divide-y divide-border/50"
+              className="divide-y divide-border"
               initial="hidden"
               animate="show"
               variants={{
                 hidden: { opacity: 0 },
-                show: { opacity: 1, transition: { staggerChildren: 0.05 } }
+                show: {
+                  opacity: 1,
+                  transition: { staggerChildren: 0.05 }
+                }
               }}
             >
               {data.length === 0 && !loading ? (
                 <tr>
-                  <td colSpan={columns.length + (actions ? 1 : 0)} className="px-6 py-20 text-center text-muted-foreground font-medium">
-                    <div className="flex flex-col items-center gap-2">
-                      <Search className="w-8 h-8 opacity-20 mb-2" />
-                      No records found.
-                    </div>
+                  <td colSpan={columns.length + (actions ? 1 : 0)} className="px-6 py-12 text-center text-muted-foreground">
+                    No records found.
                   </td>
                 </tr>
               ) : (
@@ -168,34 +165,34 @@ export default function DynamicTable({ appId, model, columns, actions, onEdit, t
                   <motion.tr 
                     key={row.id || i} 
                     variants={{
-                      hidden: { opacity: 0, y: 10 },
-                      show: { opacity: 1, y: 0 }
+                      hidden: { opacity: 0, x: -10 },
+                      show: { opacity: 1, x: 0 }
                     }}
                     className={cn(
-                      "bg-transparent hover:bg-muted/30 transition-all group/row",
+                      "bg-card hover:bg-muted/30 transition-colors group",
                       onEdit && "cursor-pointer"
                     )}
                     onClick={() => onEdit && onEdit(row)}
                   >
                     {columns.map(col => (
-                      <td key={col.field} className="px-6 py-4 whitespace-nowrap font-medium text-foreground/80">
+                      <td key={col.field} className="px-6 py-4 whitespace-nowrap">
                         {renderCell(row[col.field], col.render)}
                       </td>
                     ))}
                     {actions && actions.length > 0 && (
                       <td className="px-6 py-4 whitespace-nowrap text-right" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover/row:opacity-100 transition-all duration-300 transform translate-x-2 group-hover/row:translate-x-0">
+                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                           {actions.map(act => (
                             <button
                               key={act.action}
                               onClick={() => handleAction(act.action, row)}
                               className={cn(
-                                "p-2 rounded-xl border border-border bg-background hover:scale-110 active:scale-95 transition-all shadow-sm",
+                                "p-1.5 rounded-md border border-border bg-background hover:bg-muted transition-colors",
                                 act.action === 'delete' && "hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20 text-muted-foreground"
                               )}
                               title={act.label}
                             >
-                              {act.action === 'edit' ? <Edit2 className="w-4 h-4" /> : act.action === 'delete' ? <Trash2 className="w-4 h-4" /> : <span className="text-xs px-1 font-bold uppercase">{act.label}</span>}
+                              {act.action === 'edit' ? <Edit2 className="w-4 h-4" /> : act.action === 'delete' ? <Trash2 className="w-4 h-4" /> : <span className="text-xs px-1">{act.label}</span>}
                             </button>
                           ))}
                         </div>
@@ -207,77 +204,26 @@ export default function DynamicTable({ appId, model, columns, actions, onEdit, t
             </motion.tbody>
           </table>
         </div>
-
-        {/* Mobile Card View */}
-        <div className="md:hidden flex flex-col divide-y divide-border/50">
-          {data.length === 0 && !loading ? (
-            <div className="px-6 py-20 text-center text-muted-foreground font-medium">
-              <div className="flex flex-col items-center gap-2">
-                <Search className="w-8 h-8 opacity-20 mb-2" />
-                No records found.
-              </div>
-            </div>
-          ) : (
-            data.map((row, i) => (
-              <motion.div 
-                key={row.id || i}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className="p-5 flex flex-col gap-4 bg-card/30 hover:bg-muted/20 active:bg-muted/40 transition-colors"
-                onClick={() => onEdit && onEdit(row)}
-              >
-                <div className="grid grid-cols-2 gap-y-3 gap-x-4">
-                  {columns.map(col => (
-                    <div key={col.field} className="flex flex-col">
-                      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">{col.header}</span>
-                      <div className="text-sm font-semibold truncate">
-                        {renderCell(row[col.field], col.render)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                {actions && actions.length > 0 && (
-                  <div className="flex items-center justify-end gap-3 pt-3 mt-1 border-t border-border/50" onClick={e => e.stopPropagation()}>
-                    {actions.map(act => (
-                      <button
-                        key={act.action}
-                        onClick={() => handleAction(act.action, row)}
-                        className={cn(
-                          "flex-1 inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold transition-all border border-border shadow-sm active:scale-95",
-                          act.action === 'delete' ? "bg-destructive/10 text-destructive border-destructive/20" : "bg-background text-foreground"
-                        )}
-                      >
-                        {act.action === 'edit' ? <Edit2 className="w-3.5 h-3.5" /> : act.action === 'delete' ? <Trash2 className="w-3.5 h-3.5" /> : null}
-                        {act.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </motion.div>
-            ))
-          )}
-        </div>
       </div>
-      {/* Pagination */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-2 py-4">
-        <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest order-2 sm:order-1">
-          Showing <span className="text-foreground">{Math.min((page - 1) * limit + 1, total)}</span>–<span className="text-foreground">{Math.min(page * limit, total)}</span> <span className="mx-1 text-muted-foreground/30">/</span> <span className="text-foreground">{total}</span>
+
+      <div className="flex items-center justify-between px-2">
+        <div className="text-sm text-muted-foreground">
+          Showing <span className="font-medium">{Math.min((page - 1) * limit + 1, total)}</span> to <span className="font-medium">{Math.min(page * limit, total)}</span> of <span className="font-medium">{total}</span> results
         </div>
-        <div className="flex items-center gap-3 order-1 sm:order-2 w-full sm:w-auto">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="flex-1 sm:flex-none inline-flex items-center justify-center rounded-xl text-xs font-bold transition-all border-2 border-border bg-card hover:bg-accent hover:border-primary/50 h-10 px-6 disabled:opacity-50 disabled:pointer-events-none active:scale-95"
+            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3 disabled:opacity-50 disabled:pointer-events-none"
           >
-            <ChevronLeft className="w-4 h-4 mr-2" /> Previous
+            <ChevronLeft className="w-4 h-4 mr-1" /> Previous
           </button>
           <button
             onClick={() => setPage(p => p + 1)}
             disabled={page * limit >= total}
-            className="flex-1 sm:flex-none inline-flex items-center justify-center rounded-xl text-xs font-bold transition-all border-2 border-border bg-card hover:bg-accent hover:border-primary/50 h-10 px-6 disabled:opacity-50 disabled:pointer-events-none active:scale-95"
+            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3 disabled:opacity-50 disabled:pointer-events-none"
           >
-            Next <ChevronRight className="w-4 h-4 ml-2" />
+            Next <ChevronRight className="w-4 h-4 ml-1" />
           </button>
         </div>
       </div>
